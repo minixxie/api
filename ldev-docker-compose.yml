@@ -1,0 +1,13 @@
+version: '2'
+services:
+  ldev-api:
+    build: .
+    container_name: ldev-api
+    hostname: ldev-api
+    ports:
+      - "8080:80"
+    network_mode: bridge
+    external_links:
+      - postgres:postgres
+    environment:
+      - ENV=ldev

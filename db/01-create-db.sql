@@ -1,0 +1,2 @@
+DROP DATABASE IF EXISTS "ldev-main";
+CREATE DATABASE "ldev-main";
