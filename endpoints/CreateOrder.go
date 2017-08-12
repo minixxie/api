@@ -8,7 +8,7 @@ import "time"
 import "api/entity"
 import "net/http"
 
-func CreateOrder(db *sql.DB) func(ctx echo.Context) error {
+func CreateOrder(mainDB *sql.DB) func(ctx echo.Context) error {
     type RequestJson struct {
         Title string            `json:"title"`
         OrderCategoryId int64   `json:"orderCategoryId"`
@@ -24,27 +24,29 @@ func CreateOrder(db *sql.DB) func(ctx echo.Context) error {
         log.Printf("req.title = %s", req.Title)
 
         // id := uuid.NewV4()
-        now := time.Now().UnixNano() / 1000
-        nowISO := time.Unix(0, now * 1000).UTC().Format(time.RFC3339Nano)
+        nowNano := time.Now().UnixNano()
+        nowMicro := nowNano / 1000
+        nowISO := time.Unix(0, nowNano).UTC().Format(time.RFC3339Nano)
         order := entity.Order{
             // Id: id.String(),
             Title: req.Title,
             OrderCategoryId: req.OrderCategoryId,
-            CreatedAtMicroseconds: now,
+            CreatedAtMicroseconds: nowMicro,
             CreatedAtISO: nowISO,
-            UpdatedAtMicroseconds: now,
+            UpdatedAtMicroseconds: nowMicro,
             UpdatedAtISO: nowISO,
         }
 
-        // stmt, err := db.Prepare("INSERT INTO \"Orders\" (\"title\", \"orderCategoryId\", \"createdAt\", \"updatedAt\") VALUES (?, ?, ?, ?)")
-        // stmt, err := db.Prepare(`
+        // stmt, err := mainDBmainDB.Prepare("INSERT INTO \"Orders\" (\"title\", \"orderCategoryId\", \"createdAt\", \"updatedAt\") VALUES (?, ?, ?, ?)")
+        // stmt, err := mainDB.Prepare(`
         //     INSERT INTO "Orders" ("title", "orderCategoryId", "createdAt", "updatedAt") VALUES ($1, (SELECT "id" FROM "OrderCategory" WHERE "key" = $2), $3, $4)
         // `)
-        stmt, err := db.Prepare(`
+        stmt, err := mainDB.Prepare(`
             INSERT INTO "Order" ("title", "orderCategoryId", "createdAtMicroseconds", "updatedAtMicroseconds") 
             VALUES ($1, $2, $3, $4) 
             RETURNING id
         `)
+        defer stmt.Close()
         if err != nil {
             log.Fatal("Cannot prepare DB statement: ", err)
         }

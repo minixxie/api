@@ -8,14 +8,14 @@ import "time"
 import "api/entity"
 import "net/http"
 
-func GetOrders(db *sql.DB) func(ctx echo.Context) error {
+func GetOrders(mainDB *sql.DB) func(ctx echo.Context) error {
     type ResponseJson struct {
         Count int                  `json:"count"`
         Orders []entity.Order      `json:"orders"`
     }
     return func(ctx echo.Context) error {
         log.Printf("Hello World")
-        rows, err := db.Query(`
+        rows, err := mainDB.Query(`
             SELECT "id", "title", "orderCategoryId", "createdAtMicroseconds", "updatedAtMicroseconds"
             FROM
             "Order" 
