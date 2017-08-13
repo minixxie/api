@@ -1,0 +1,4 @@
+jwtSecret: hello123
+dbs:
+  main: postgres://ldev-api:ldev-api@postgres/ldev-main?sslmode=disable
+  user: postgres://ldev-api:ldev-api@postgres/ldev-user?sslmode=disable

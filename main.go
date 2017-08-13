@@ -1,21 +1,28 @@
 package main
 
-import "log"
 import "gopkg.in/labstack/echo.v3"
 import "database/sql"
 import _ "github.com/lib/pq"
 // import _ "gopkg.in/go-sql-driver/mysql.v1"
+import "api/lib"
 import "api/endpoints"
+// import "api/entity"
+import "log"
 
 func main() {
-    // db, err := sql.Open("mysql", "ldev-api:ldev-api@tcp(mariadb10:3306)/ldev-main-db?charset=utf8")
+    config, err := lib.LoadConfig()
+    if err != nil {
+        log.Fatal("Cannot load config file:", err)
+    }
+    log.Printf("main DB: %s", config.Dbs.Main)
+    log.Printf("user DB: %s", config.Dbs.User)
 
-    mainDB, err := sql.Open("postgres", "postgres://ldev-api:ldev-api@postgres/ldev-main?sslmode=disable")
+    // db, err := sql.Open("mysql", "ldev-api:ldev-api@tcp(mariadb10:3306)/ldev-main-db?charset=utf8")
+    mainDB, err := sql.Open("postgres", config.Dbs.Main)
     if err != nil {
         log.Fatal("Cannot connect to DB (main):", err)
     }
-
-    userDB, err := sql.Open("postgres", "postgres://ldev-api:ldev-api@postgres/ldev-user?sslmode=disable")
+    userDB, err := sql.Open("postgres", config.Dbs.User)
     if err != nil {
         log.Fatal("Cannot connect to DB (user):", err)
     }

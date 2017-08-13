@@ -1,0 +1,4 @@
+jwtSecret: XLbnXGhyVq6BAy7GDoFDn997gssQQWIFYikGbSx3FMxy
+dbs:
+  main: postgres://dev-api:dev-api@postgres/dev-main?sslmode=disable
+  user: postgres://dev-api:dev-api@postgres/dev-user?sslmode=disable

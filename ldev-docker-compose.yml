@@ -4,6 +4,8 @@ services:
     build: .
     container_name: ldev-api
     hostname: ldev-api
+    volumes:
+      - "./config/ldev.yml:/config/ldev.yml"
     ports:
       - "8080:80"
     network_mode: bridge
