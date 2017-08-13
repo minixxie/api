@@ -1,24 +1,13 @@
 version: '2'
 services:
   ldev-api:
-    image: minixxie/golang:1.7
+    build: .
     container_name: ldev-api
     hostname: ldev-api
-    volumes:
-      - ".:/go/src/app"
-    working_dir: /go/src/app
-    command: ./entry.sh
     ports:
       - "8080:80"
-    networks:
-      - ldev-backend
-      - mongo_default
+    network_mode: bridge
+    external_links:
+      - postgres:postgres
     environment:
       - ENV=ldev
-networks:
-  ldev-backend:
-    external:
-      name: ldev-backend
-  mongo_default:
-    external:
-      name: mongo_default
