@@ -4,12 +4,13 @@ services:
     build: .
     container_name: ldev-api
     hostname: ldev-api
+    restart: always
     volumes:
       - "./config/ldev.yml:/config/ldev.yml"
+    environment:
+      - ENV=ldev
     ports:
       - "8080:80"
     network_mode: bridge
     external_links:
       - postgres:postgres
-    environment:
-      - ENV=ldev
